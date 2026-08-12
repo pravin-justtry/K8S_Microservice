@@ -1,6 +1,19 @@
 # Namespace is intentionally not hard-coded here.
 # Install with: helm upgrade --install microservices ./microservices-helm -n microservices --create-namespace
+ingress:
+  enabled: true
+  className: traefik
 
+  annotations: {}
+
+  hosts:
+    - host: ecommerce-prod.justtrytech.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+  tls: []
+  
 services:
   emailservice:
     image: prasanna1808/emailservice:latest
@@ -320,17 +333,4 @@ services:
       initialDelaySeconds: 20
       periodSeconds: 15
 
-  ingress:
-    enabled: true
-    className: traefik
-
-    annotations: {}
-
-    hosts:
-      - host: ecommerce-prod.justtrytech.com
-        paths:
-          - path: /
-            pathType: Prefix
-
-    tls: []
 imagePullSecrets: []
