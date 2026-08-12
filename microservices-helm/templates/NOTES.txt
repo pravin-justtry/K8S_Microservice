@@ -1,0 +1,13 @@
+1. Check the release:
+   kubectl get pods,svc -n {{ .Release.Namespace }}
+
+2. Frontend NodePort:
+   kubectl get svc frontend -n {{ .Release.Namespace }}
+
+3. Frontend LoadBalancer:
+   kubectl get svc frontend-external -n {{ .Release.Namespace }}
+
+Internal service DNS names are the Kubernetes Service names, for example:
+   cartservice:7070
+   productcatalogservice:3550
+   checkoutservice:5050
