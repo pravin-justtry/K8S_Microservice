@@ -1,5 +1,6 @@
 {{- range $name, $svc := .Values.services }}
-{{- if $svc.service.enabled }}
+
+{{- if and $svc.service $svc.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,7 +19,8 @@ spec:
       protocol: {{ default "TCP" $svc.service.protocol }}
 ---
 {{- end }}
-{{- if and (eq $name "frontend") $svc.externalService.enabled }}
+
+{{- if and (eq $name "frontend") $svc.externalService $svc.externalService.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -37,4 +39,5 @@ spec:
       protocol: {{ default "TCP" $svc.externalService.protocol }}
 ---
 {{- end }}
+
 {{- end }}
