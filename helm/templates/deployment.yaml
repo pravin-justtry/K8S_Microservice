@@ -1,0 +1,80 @@
+{{- range $name, $svc := .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels:
+    app: {{ $name }}
+    {{- include "microservices.labels" $ | nindent 4 }}
+spec:
+  replicas: {{ default 1 $svc.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+        {{- include "microservices.labels" $ | nindent 8 }}
+      {{- with $svc.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: default
+      {{- with $svc.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $svc.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      {{- with $svc.restartPolicy }}
+      restartPolicy: {{ . }}
+      {{- end }}
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ if eq $name "redis-cart" }}redis{{ else if eq $name "loadgenerator" }}main{{ else }}server{{ end }}
+          image: {{ $svc.image | quote }}
+          {{- if $svc.containerPort }}
+          ports:
+            - containerPort: {{ $svc.containerPort }}
+          {{- end }}
+          {{- with $svc.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $svc.env }}
+          env:
+            {{- range $envName, $envValue := . }}
+            - name: {{ $envName }}
+              value: {{ $envValue | quote }}
+            {{- end }}
+          {{- end }}
+          {{- with $svc.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $svc.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $svc.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if and (eq $name "redis-cart") $svc.persistence.enabled }}
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+          {{- end }}
+      {{- if and (eq $name "redis-cart") $svc.persistence.enabled }}
+      volumes:
+        - name: redis-data
+          emptyDir: {}
+      {{- end }}
+---
+{{- end }}
