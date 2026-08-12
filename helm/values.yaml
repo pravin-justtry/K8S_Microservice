@@ -44,11 +44,20 @@ services:
       runAsUser: 1000
     terminationGracePeriodSeconds: 5
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:8080"]
-      periodSeconds: 5
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:8080
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:8080"]
-      periodSeconds: 5
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:8080
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
   checkoutservice:
     image: prasanna1808/checkoutservice:latest
@@ -72,9 +81,20 @@ services:
       requests: { cpu: 100m, memory: 64Mi }
       limits: { cpu: 200m, memory: 128Mi }
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:5050"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:5050
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:5050"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:5050
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
   recommendationservice:
     image: prasanna1808/recommendationservice:latest
@@ -95,11 +115,20 @@ services:
       limits: { cpu: 200m, memory: 450Mi }
     terminationGracePeriodSeconds: 5
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:8080"]
-      periodSeconds: 5
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:8080
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:8080"]
-      periodSeconds: 5
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:8080
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
   frontend:
     image: prasanna1808/frontend:latest
@@ -168,9 +197,20 @@ services:
       limits: { cpu: 200m, memory: 128Mi }
     terminationGracePeriodSeconds: 5
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:50051"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:50051
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:50051"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:50051
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
   productcatalogservice:
     image: prasanna1808/productcatalogservice:latest
@@ -189,9 +229,20 @@ services:
       requests: { cpu: 100m, memory: 64Mi }
       limits: { cpu: 200m, memory: 128Mi }
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:3550"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:3550
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:3550"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:3550
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
   cartservice:
     image: prasanna1808/cartservice:latest
@@ -210,10 +261,18 @@ services:
       limits: { cpu: 300m, memory: 128Mi }
     terminationGracePeriodSeconds: 5
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:7070
+          - -rpc-timeout=5s
       initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:7070
+          - -rpc-timeout=5s
       initialDelaySeconds: 15
       periodSeconds: 10
 
@@ -257,9 +316,20 @@ services:
       requests: { cpu: 100m, memory: 64Mi }
       limits: { cpu: 200m, memory: 128Mi }
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:7000"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:7000
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:7000"]
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:7000
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
   shippingservice:
     image: prasanna1808/shippingservice:latest
@@ -278,11 +348,20 @@ services:
       requests: { cpu: 100m, memory: 64Mi }
       limits: { cpu: 200m, memory: 128Mi }
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:50051"]
-      periodSeconds: 5
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:50051
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:50051"]
-      periodSeconds: 5
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:50051
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
   redis-cart:
     image: redis:alpine
@@ -325,12 +404,19 @@ services:
       requests: { cpu: 200m, memory: 180Mi }
       limits: { cpu: 300m, memory: 300Mi }
     readinessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:9555"]
-      initialDelaySeconds: 20
-      periodSeconds: 15
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:9555
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
     livenessProbe:
-      exec: ["/bin/grpc_health_probe", "-addr=:9555"]
-      initialDelaySeconds: 20
-      periodSeconds: 15
+      exec:
+        command:
+          - /bin/grpc_health_probe
+          - -addr=:9555
+          - -rpc-timeout=5s
+      initialDelaySeconds: 15
+      periodSeconds: 10
 
 imagePullSecrets: []
